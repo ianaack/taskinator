@@ -106,11 +106,19 @@ var createTaskActions = function (taskId) {
 formEl.addEventListener("submit", taskFormHandler);
 
 var taskButtonHandler = function (event) {
-  console.log(event.target);
+  // get target element from event
+  var targetEl = event.target;
 
-  if (event.target.matches(".delete-btn")) {
+  // edit button was clicked
+  if (targetEl.matches(".edit-btn")) {
+    var taskId = targetEl.getAttribute("data-task-id");
+    editTask(taskId);
+  }
+
+  // delete button was clicked
+  else if (targetEl.matches(".delete-btn")) {
     // get the element's task id
-    var taskId = event.target.getAttribute("data-task-id");
+    var taskId = targetEl.getAttribute("data-task-id");
     deleteTask(taskId);
   }
 };
@@ -121,11 +129,21 @@ var deleteTask = function (taskId) {
   );
   taskSelected.remove();
 };
-pageContentEl.addEventListener("click", taskButtonHandler);
 
-// tasks will have a default status of Tasks To Do
-// changing the status dropdown will move the task to the appropriate column (tasks to do, tasks in progress, tasks completed)
-// each task will have an edit and delete button
-// clicking edit will load the task's information in the form and change the button to say "save task"
-// clicking save task will update the tasks information in the corresponding column
-// clicking delete will remove the task entirely
+var editTask = function (taskId) {
+  // get task list item element
+  var taskSelected = document.querySelector(
+    ".task-item[data-task-id='" + taskId + "']"
+  );
+
+  // get content from task name and type
+  var taskName = taskSelected.querySelector("h3.task-name").textContent;
+
+  var taskType = taskSelected.querySelector("span.task-type").textContent;
+
+  document.querySelector("input[name='task-name']").value = taskName;
+  document.querySelector("select[name='task-type']").value = taskType;
+  document.querySelector("#save-task").textContent = "Save Task";
+  formEl.setAttribute("data-task-id", taskId);
+};
+pageContentEl.addEventListener("click", taskButtonHandler);

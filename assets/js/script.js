@@ -1,13 +1,24 @@
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 
-var createTaskHandler = function (event) {
+var taskFormHandler = function (event) {
   event.preventDefault();
   // submit task title variable (whatever you type)
   var taskNameInput = document.querySelector("input[name='task-name']").value;
   // select task type variable (home, school, work)
   var taskTypeInput = document.querySelector("select[name='task-type']").value;
 
+  // package up data as an object
+  var taskDataObj = {
+    name: taskNameInput,
+    type: taskTypeInput,
+  };
+
+  // send it as an argument to createTaskEl
+  createTaskEl(taskDataObj);
+};
+
+var createTaskEl = function (taskDataObj) {
   // create list item of whatever you type in input
   var listItemEl = document.createElement("li");
   //give it a class name of "task-item"
@@ -21,9 +32,9 @@ var createTaskHandler = function (event) {
   // add HTML content to div
   taskInfoEl.innerHTML =
     "<h3 class='task-name'>" +
-    taskNameInput +
+    taskDataObj.name +
     "</h3><span class='task-type'>" +
-    taskTypeInput +
+    taskDataObj.type +
     "</span>";
   // appendChild
   listItemEl.appendChild(taskInfoEl);
@@ -32,4 +43,10 @@ var createTaskHandler = function (event) {
   tasksToDoEl.appendChild(listItemEl);
 };
 
-formEl.addEventListener("submit", createTaskHandler);
+formEl.addEventListener("submit", taskFormHandler);
+
+// create a new function to take in the tasks name and title as arguments and create the HTML elements that get added to the page.
+
+// move the code that creates and add HTML elements from the handler function into the newly created function
+
+// update the handler function to send the task name and type values from the form to the newly created function

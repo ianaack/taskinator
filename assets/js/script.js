@@ -1,5 +1,6 @@
 var formEl = document.querySelector("#task-form");
 var tasksToDoEl = document.querySelector("#tasks-to-do");
+var taskIdCounter = 0;
 
 var taskFormHandler = function (event) {
   event.preventDefault();
@@ -32,6 +33,9 @@ var createTaskEl = function (taskDataObj) {
   //give it a class name of "task-item"
   listItemEl.className = "task-item";
 
+  // add task id as a custom attribut
+  listItemEl.setAttribute("data-task-id", taskIdCounter);
+
   // create div to hold task info and add to list item
   var taskInfoEl = document.createElement("div");
   // give it a class name
@@ -47,14 +51,66 @@ var createTaskEl = function (taskDataObj) {
   // appendChild
   listItemEl.appendChild(taskInfoEl);
 
+  var taskActionsEl = createTaskActions(taskIdCounter);
+  listItemEl.appendChild(taskActionsEl);
+
   // add entire list item to list
   tasksToDoEl.appendChild(listItemEl);
+
+  // increase task counter for next unique id
+  taskIdCounter++;
+};
+
+var createTaskActions = function (taskId) {
+  var actionContainerEl = document.createElement("div");
+  actionContainerEl.className = "task-actions";
+
+  // create edit button
+  var editButtonEl = document.createElement("button");
+  editButtonEl.textContent = "Edit";
+  editButtonEl.className = "btn edit-btn";
+  editButtonEl.setAttribute("data-task-id", taskId);
+
+  actionContainerEl.appendChild(editButtonEl);
+
+  //create delete button
+  var deleteButtonEl = document.createElement("delete");
+  deleteButtonEl.textContent = "Delete";
+  deleteButtonEl.className = "btn delete-btn";
+  deleteButtonEl.setAttribute("data-task-id", taskId);
+
+  actionContainerEl.appendChild(deleteButtonEl);
+
+  var statusSelectEl = document.createElement("select");
+  statusSelectEl.className = "select-status";
+  statusSelectEl.setAttribute("name", "status-change");
+  statusSelectEl.setAttribute("data-task-id", taskId);
+
+  actionContainerEl.appendChild(statusSelectEl);
+
+  var statusChoices = ["To Do", "In Progress", "Completed"];
+  for (var i = 0; i < statusChoices.length; i++) {
+    // create option element
+    var statusOptionEl = document.createElement("option");
+    statusOptionEl.textContent = statusChoices[i];
+    statusOptionEl.setAttribute("value", statusChoices[i]);
+
+    // append to select
+    statusSelectEl.appendChild(statusOptionEl);
+  }
+
+  return actionContainerEl;
 };
 
 formEl.addEventListener("submit", taskFormHandler);
 
-// create a new function to take in the tasks name and title as arguments and create the HTML elements that get added to the page.
+// tasks will have a default status of Tasks To Do
+// changing the status dropdown will move the task to the appropriate column (tasks to do, tasks in progress, tasks completed)
+// each task will have an edit and delete button
+// clicking edit will load the task's information in the form and change the button to say "save task"
+// clicking save task will update the tasks information in the corresponding column
+// clicking delete will remove the task entirely
 
-// move the code that creates and add HTML elements from the handler function into the newly created function
-
-// update the handler function to send the task name and type values from the form to the newly created function
+//save the edited task
+//move the task based on status
+//save progress
